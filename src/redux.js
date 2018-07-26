@@ -8,34 +8,33 @@ export const onCaptureImage = screenshot => ({
     screenshot,
 });
 
-export const requestPrice = () => ({
-    type: 'REQUEST_PRICE',
+export const requestData = () => ({
+    type: 'REQUEST_DATA',
 });
-export const receivedPrice = result => ({
-    type: 'RECEIVED_PRICE',
+export const receivedData = result => ({
+    type: 'RECEIVED_DATA',
     result,
 });
 
-export function fetchPrice(image) {
+export function fetchData(image) {
     return function (dispatch) {
-        dispatch(requestPrice());
-
-        return fetch(`http://localhost:5000/api/hello/post`, {
+        dispatch(requestData());
+        return fetch(`http://localhost:5000/rekognition/detect`, {
             method: 'POST',
             body: JSON.stringify(image),})
             .then(function (response) {
                 return response.json()
             })
             .then(function (response) {
-                console.log(response);
-                dispatch(receivedPrice(response));// now this is the body of the response
+                console.log(response); // now this is the body of the response
+                dispatch(receivedData(response));
             });
 
     };
 }
 
 // reducers.js
-export const quoteApp = (state = {loading: false}, action) => {
+export const rekognition = (state = {fetchingData: false}, action) => {
     switch (action.type) {
         case 'CAPTURE_IMAGE':
             return {
@@ -43,17 +42,18 @@ export const quoteApp = (state = {loading: false}, action) => {
                 image: action.screenshot
             }
 
-        case 'REQUEST_PRICE':
+        case 'REQUEST_DATA':
             return {
                 ...state,
-                loading: true };
+                fetchingData: true };
 
-        case 'RECEIVED_PRICE':
+        case 'RECEIVED_DATA':
             console.log(action);
             return {
                 ...state,
-                price: action.result.price,
-                loading: false };
+                fetchingData: false,
+                rekognitionData: action.result
+            };
 
         default:
             return state;
@@ -61,7 +61,7 @@ export const quoteApp = (state = {loading: false}, action) => {
 };
 
 export const reducers = combineReducers({
-    quoteApp,
+    rekognition,
 });
 
 // store.js

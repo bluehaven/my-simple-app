@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { onCaptureImage } from './redux';
 import Webcam from 'react-webcam';
-import { fetchPrice } from './redux';
+import { fetchData } from './redux';
 import './App.css';
 
 class App extends React.Component {
@@ -34,8 +34,8 @@ class App extends React.Component {
                     videoConstraints={videoConstraints}
                 />
                 <button onClick={this.handleClick}>Capture photo</button>
-                <button onClick={() => this.props.fetchPrice(this.props.quoteApp.image)}>Get Quote</button>
-                <pre>{JSON.stringify(this.props.quoteApp, null, 2)}</pre>
+                <button onClick={() => this.props.fetchData(this.props.rekognition.image)}>Rekonize</button>
+                <pre>{JSON.stringify(this.props.rekognition, null, 2)}</pre>
             </div>
 
         );
@@ -44,12 +44,12 @@ class App extends React.Component {
 
 // AppContainer.js
 const mapStateToProps = (state, ownProps) => ({
-    quoteApp: state.quoteApp,
+    rekognition: state.rekognition,
 });
 
 const mapDispatchToProps = {
     onCaptureImage,
-    fetchPrice
+    fetchData
 };
 
 const AppContainer = connect(

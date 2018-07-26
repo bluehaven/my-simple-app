@@ -1,31 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { activateGeod, closeGeod, } from './redux';
+import Webcam from 'react-webcam';
 import logo from './logo.svg';
 import './App.css';
 
-export class App extends Component {
-
-    render() {
-        return (
-            <div>
-
-                <h1>{this.props.geod.title || 'Hello World!'}</h1>
-
-                {this.props.geod.title ?
-                    <button onClick={this.props.closeGeod}>
-                        Exit Geod
-                    </button> :
-                    <button onClick={() => this.props.activateGeod({ title: 'I am a geo dude!' })}>
-                        Click Me!
-                    </button>
-                }
-
-            </div>
-        );
-
+class App extends React.Component {
+    setRef = (webcam) => {
+        this.webcam = webcam;
     }
 
+    capture = () => {
+        const imageSrc = this.webcam.getScreenshot();
+        console.log(imageSrc);
+    };
+
+    render() {
+        const videoConstraints = {
+            width: 1280,
+            height: 720,
+            facingMode: 'user',
+        };
+
+        return (
+            <div>
+                <Webcam
+                    audio={false}
+                    height={350}
+                    ref={this.setRef}
+                    screenshotFormat="image/jpeg"
+                    width={350}
+                    videoConstraints={videoConstraints}
+                />
+                <button onClick={this.capture}>Capture photo</button>
+            </div>
+        );
+    }
 }
 
 // AppContainer.js

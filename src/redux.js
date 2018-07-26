@@ -1,37 +1,72 @@
 import { applyMiddleware, combineReducers, createStore, } from 'redux';
+import thunk from 'redux-thunk';
+import { logger } from 'redux-logger';
 
 // actions.js
-export const activateGeod = geod => ({
-    type: 'ACTIVATE_GEOD',
-    geod,
+export const onCaptureImage = screenshot => ({
+    type: 'CAPTURE_IMAGE',
+    screenshot,
 });
 
-export const closeGeod = () => ({
-    type: 'CLOSE_GEOD',
+export const requestPrice = () => ({
+    type: 'REQUEST_PRICE',
 });
+export const receivedPrice = result => ({
+    type: 'RECEIVED_PRICE',
+    result,
+});
+
+export function fetchPrice(image) {
+    return function (dispatch) {
+        dispatch(requestPrice());
+
+        return fetch(`http://localhost:5000/api/hello/post`, {
+            method: 'POST',
+            body: JSON.stringify(image),})
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (response) {
+                console.log(response);
+                dispatch(receivedPrice(response));// now this is the body of the response
+            });
+
+    };
+}
 
 // reducers.js
-export const geod = (state = {}, action) => {
+export const quoteApp = (state = {loading: false}, action) => {
     switch (action.type) {
-        case 'ACTIVATE_GEOD':
-            console.log(state);
-            return action.geod;
+        case 'CAPTURE_IMAGE':
+            return {
+                ...state,
+                image: action.screenshot
+            }
 
-        case 'CLOSE_GEOD':
-            console.log(state);
-            return {};
+        case 'REQUEST_PRICE':
+            return {
+                ...state,
+                loading: true };
+
+        case 'RECEIVED_PRICE':
+            console.log(action);
+            return {
+                ...state,
+                price: action.result.price,
+                loading: false };
+
         default:
             return state;
     }
 };
 
 export const reducers = combineReducers({
-    geod,
+    quoteApp,
 });
 
 // store.js
 export function configureStore(initialState = {}) {
-    const store = createStore(reducers, initialState);
+    const store = createStore(reducers, initialState, applyMiddleware(thunk));
     return store;
 };
 

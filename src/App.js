@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { activateGeod, closeGeod, } from './redux';
+import { onCaptureImage } from './redux';
 import Webcam from 'react-webcam';
-import logo from './logo.svg';
+import { fetchPrice } from './redux';
 import './App.css';
 
 class App extends React.Component {
@@ -10,10 +10,11 @@ class App extends React.Component {
         this.webcam = webcam;
     }
 
-    capture = () => {
-        const imageSrc = this.webcam.getScreenshot();
-        console.log(imageSrc);
-    };
+    handleClick = () => {
+        const screenshot = this.webcam.getScreenshot();
+        //console.log(screenshot);
+        this.props.onCaptureImage(screenshot);
+    }
 
     render() {
         const videoConstraints = {
@@ -32,20 +33,23 @@ class App extends React.Component {
                     width={350}
                     videoConstraints={videoConstraints}
                 />
-                <button onClick={this.capture}>Capture photo</button>
+                <button onClick={this.handleClick}>Capture photo</button>
+                <button onClick={() => this.props.fetchPrice(this.props.quoteApp.image)}>Get Quote</button>
+                <pre>{JSON.stringify(this.props.quoteApp, null, 2)}</pre>
             </div>
+
         );
     }
 }
 
 // AppContainer.js
 const mapStateToProps = (state, ownProps) => ({
-    geod: state.geod,
+    quoteApp: state.quoteApp,
 });
 
 const mapDispatchToProps = {
-    activateGeod,
-    closeGeod,
+    onCaptureImage,
+    fetchPrice
 };
 
 const AppContainer = connect(

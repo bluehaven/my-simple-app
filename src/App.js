@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { onCaptureImage } from './redux';
 import Webcam from 'react-webcam';
 import { fetchData } from './redux';
-import {Button, ButtonToolbar} from 'react-bootstrap';
+import {Button, ButtonToolbar, Grid, Row, Col} from 'react-bootstrap';
 import logo from "./logo.png";
 import "./App.css";
 
 function createMarkup(imageSrc) {
-    return {__html: '<img src="' + imageSrc + '">'};
+    return {__html: '<img width="400" src="' + imageSrc + '">'};
 }
 
 class App extends React.Component {
@@ -51,7 +51,18 @@ class App extends React.Component {
                     </ButtonToolbar>
                 </div>
                 <hr></hr>
-                <pre className="App-bottom">{JSON.stringify(this.props.rekognition, null, 2)}</pre>
+                <Grid>
+                    <Row className="show-grid">
+                        <Col md={6}>
+                            <div>
+                                <div dangerouslySetInnerHTML={createMarkup(this.props.rekognition.image)} />
+                            </div>
+                        </Col>
+                        <Col md={6}>
+                            <pre className="App-bottom">{JSON.stringify(this.props.rekognition, null, 2)}</pre>
+                        </Col>
+                    </Row>
+                </Grid>
             </div>
 
         );

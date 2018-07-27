@@ -46,7 +46,7 @@ export function fetchData(image) {
 }
 
 // reducers.js
-export const rekognition = (state = {fetchingData: false}, action) => {
+export const rekognition = (state = {fetchingData: false, image:""}, action) => {
     switch (action.type) {
         case 'CAPTURE_IMAGE':
             return {

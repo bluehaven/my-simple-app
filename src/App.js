@@ -55,10 +55,26 @@ class App extends React.Component {
                     <Row className="show-grid">
                         <Col md={6}>
                             <div>
-                                <div dangerouslySetInnerHTML={createMarkup(this.props.rekognition.image)} />
+                                <div className="App-intro">Your Quote Summary </div> <br/>
+                                <pre>Age: {this.props.rekognition.rekognitionData ? this.props.rekognition.rekognitionData.estimatedAge : ""} </pre>
+                            </div>
+                            <div>
+                                <pre>Gender: {this.props.rekognition.rekognitionData ? this.props.rekognition.rekognitionData.gender.value : ""} </pre>
+                            </div>
+                            <div>
+                                <pre>Life Insurance: {this.props.rekognition.rekognitionData ? this.props.rekognition.rekognitionData.quoteDetailsList[0].premium : ""} </pre>
+                            </div>
+                            <div>
+                                <pre>Health Insurance: {this.props.rekognition.rekognitionData ? this.props.rekognition.rekognitionData.quoteDetailsList[1].premium : ""} </pre>
+                            </div>
+                            <div>
+                                <pre>Travel Insurance: {this.props.rekognition.rekognitionData ? this.props.rekognition.rekognitionData.quoteDetailsList[2].premium : ""} </pre>
                             </div>
                         </Col>
                         <Col md={6}>
+                            <div>
+                               <pre> <div dangerouslySetInnerHTML={createMarkup(this.props.rekognition.image)} /></pre>
+                            </div>
                             <pre className="App-bottom">{JSON.stringify(this.props.rekognition, null, 2)}</pre>
                         </Col>
                     </Row>

@@ -3,7 +3,13 @@ import { connect } from 'react-redux';
 import { onCaptureImage } from './redux';
 import Webcam from 'react-webcam';
 import { fetchData } from './redux';
-import './App.css';
+import {Button, ButtonToolbar} from 'react-bootstrap';
+import logo from "./logo.png";
+import "./App.css";
+
+function createMarkup(imageSrc) {
+    return {__html: '<img src="' + imageSrc + '">'};
+}
 
 class App extends React.Component {
     setRef = (webcam) => {
@@ -24,18 +30,28 @@ class App extends React.Component {
         };
 
         return (
-            <div>
-                <Webcam
-                    audio={false}
-                    height={350}
-                    ref={this.setRef}
-                    screenshotFormat="image/jpeg"
-                    width={350}
-                    videoConstraints={videoConstraints}
-                />
-                <button onClick={this.handleClick}>Capture photo</button>
-                <button onClick={() => this.props.fetchData(this.props.rekognition.image)}>Rekonize</button>
-                <pre>{JSON.stringify(this.props.rekognition, null, 2)}</pre>
+            <div className="App">
+                <div className="App-header">
+                    <img src={logo} className="App-logo" alt="logo" />
+                    <h2>the cold never bothered me anyway</h2>
+                </div>
+                <div className="App-webcam">
+                    <Webcam
+                        audio={false}
+                        height={350}
+                        ref={this.setRef}
+                        screenshotFormat="image/jpeg"
+                        videoConstraints={videoConstraints}
+                    />
+                </div>
+                <div className="App-button">
+                    <ButtonToolbar>
+                        <Button onClick={this.handleClick} block>Take Photo!</Button>
+                        <Button onClick={() => this.props.fetchData(this.props.rekognition.image)} block>Rekognize</Button>
+                    </ButtonToolbar>
+                </div>
+                <hr></hr>
+                <pre className="App-bottom">{JSON.stringify(this.props.rekognition, null, 2)}</pre>
             </div>
 
         );

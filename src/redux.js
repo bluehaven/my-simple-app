@@ -16,18 +16,30 @@ export const receivedData = result => ({
     result,
 });
 
+function stripCharactersInBase64Image(image) {
+    return image.replace(/data:.+?,/, "");
+}
+
 export function fetchData(image) {
     return function (dispatch) {
         dispatch(requestData());
-        return fetch(`http://localhost:5000/rekognition/detect`, {
+        var body = {"image": stripCharactersInBase64Image(image)};
+        console.log(body);
+        return fetch(`http://c089bd75.ngrok.io/rekognition/detect`, {
             method: 'POST',
-            body: JSON.stringify(image),})
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body),})
             .then(function (response) {
                 return response.json()
             })
             .then(function (response) {
-                console.log(response); // now this is the body of the response
+                console.log(response);
                 dispatch(receivedData(response));
+            })
+            .catch(function(error) {
+                console.log(error);
             });
 
     };
@@ -48,7 +60,6 @@ export const rekognition = (state = {fetchingData: false}, action) => {
                 fetchingData: true };
 
         case 'RECEIVED_DATA':
-            console.log(action);
             return {
                 ...state,
                 fetchingData: false,
